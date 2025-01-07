@@ -13,3 +13,6 @@ venv/
 .java-version
 /pyflink/
 
+.classpath
+.project
+.settings/

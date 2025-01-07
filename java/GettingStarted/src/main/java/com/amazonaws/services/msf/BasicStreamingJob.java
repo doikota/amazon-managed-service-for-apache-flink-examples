@@ -60,6 +60,7 @@ public class BasicStreamingJob {
     public static void main(String[] args) throws Exception {
         // Set up the streaming execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        LOGGER.info("StreamExecutionEnvironment: {}", env.getClass().getSimpleName());
 
         // Load application parameters
         final Map<String, Properties> applicationParameters = loadApplicationProperties(env);
