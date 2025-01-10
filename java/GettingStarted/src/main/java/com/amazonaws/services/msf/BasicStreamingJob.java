@@ -65,10 +65,10 @@ public class BasicStreamingJob {
         // Load application parameters
         final Map<String, Properties> applicationParameters = loadApplicationProperties(env);
 
-        SourceFunction<String> source = createSource(applicationParameters.get("InputStream0"));
+        SourceFunction<String> source = createSource(applicationParameters.get("InputStreamGroup"));
         DataStream<String> input = env.addSource(source, "Kinesis Source");
 
-        Sink<String> sink = createSink(applicationParameters.get("OutputStream0"));
+        Sink<String> sink = createSink(applicationParameters.get("OutputStreamGroup"));
         input.sinkTo(sink);
 
         env.execute("Flink streaming Java API skeleton");

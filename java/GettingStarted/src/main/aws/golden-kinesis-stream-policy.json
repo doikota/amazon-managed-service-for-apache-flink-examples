@@ -1,0 +1,62 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::golden-kinesisanalytics-basicstreamingjob",
+                "arn:aws:s3:::golden-kinesisanalytics-basicstreamingjob/*"
+            ]
+        },
+        {
+            "Sid": "ListCloudwatchLogGroups",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:DescribeLogGroups"
+            ],
+            "Resource": [
+                "arn:aws:logs:ap-northeast-1:718624127210:log-group:*"
+            ]
+        },
+        {
+            "Sid": "ListCloudwatchLogStreams",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:ap-northeast-1:718624127210:log-group:golden-kinesis-analytics-application:log-stream:*"
+            ]
+        },
+        {
+            "Sid": "PutCloudwatchLogs",
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:ap-northeast-1:718624127210:log-group:golden-kinesis-analytics-application:log-stream:kinesis-analytics-log-stream"
+            ]
+        },
+        {
+            "Sid": "ReadInputStream",
+            "Effect": "Allow",
+            "Action": "kinesis:*",
+            "Resource": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/InputStream"
+        },
+        {
+            "Sid": "WriteOutputStream",
+            "Effect": "Allow",
+            "Action": "kinesis:*",
+            "Resource": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/OutputStream"
+        }
+    ]
+}
