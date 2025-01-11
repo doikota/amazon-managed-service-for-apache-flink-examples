@@ -20,7 +20,7 @@ def generate(stream_name, kinesis_client):
         data = get_data()
         print(data)
         kinesis_client.put_record(
-            StreamName=stream_name, Data=json.dumps(data), PartitionKey="partitionkey"
+            StreamName=stream_name, Data=json.dumps(data), PartitionKey=data.get("TICKER")
         )
         # sleep for 10 second
         time.sleep(10)

@@ -1,16 +1,17 @@
 [
   {
-    "PropertyGroupId": "InputStream0",
+    "PropertyGroupId": "InputStreamGroup",
     "PropertyMap": {
       "aws.region": "ap-northeast-1",
-      "stream.name": "ExampleInputStream"
+      "stream.name": "InputStream",
+      "source.init.position": "LATEST"
     }
   },
   {
-    "PropertyGroupId": "OutputStream0",
+    "PropertyGroupId": "OutputStreamGroup",
     "PropertyMap": {
       "aws.region": "ap-northeast-1",
-      "stream.name": "ExampleOutputStream"
+      "stream.name": "OutputStream"
     }
   }
 ]
