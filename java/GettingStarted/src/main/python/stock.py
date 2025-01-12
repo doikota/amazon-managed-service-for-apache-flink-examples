@@ -8,19 +8,22 @@ STREAM_NAME = "InputStream"
 
 
 def get_data():
+    # Generate random stock data as JSON
     return {
-        "EVENT_TIME": datetime.datetime.now().isoformat(),
-        "TICKER": random.choice(["AAPL", "AMZN", "MSFT", "INTC", "TBV"]),
-        "PRICE": round(random.random() * 100, 2),
+        "eventTime": datetime.datetime.now().isoformat(),
+        "ticker": random.choice(["AAPL", "AMZN", "MSFT", "INTC", "TBV"]),
+        "price": round(random.random() * 100, 2),
     }
 
 
 def generate(stream_name, kinesis_client):
     while True:
         data = get_data()
+        # data をJSON形式にする
         print(data)
         kinesis_client.put_record(
-            StreamName=stream_name, Data=json.dumps(data).encode("utf-8"), PartitionKey=data.get("TICKER")
+            # StreamName=stream_name, Data=json.dumps(data).encode("utf-8"), PartitionKey=data.get("ticker")
+            StreamName=stream_name, Data=json.dumps(data), PartitionKey=data.get("ticker")
         )
         # sleep for 10 second
         time.sleep(10)

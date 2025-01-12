@@ -11,8 +11,6 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.kinesis.sink.KinesisStreamsSink;
 import org.apache.flink.connector.kinesis.source.KinesisStreamsSource;
-import org.apache.flink.formats.json.JsonDeserializationSchema;
-import org.apache.flink.formats.json.JsonSerializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
@@ -21,13 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class StreamingJob {
     private static final Logger LOG = LoggerFactory.getLogger(StreamingJob.class);
 
-    // Name of the local JSON resource with the application properties in the same format as they are received from the Amazon Managed Service for Apache Flink runtime
-    private static final String LOCAL_APPLICATION_PROPERTIES_RESOURCE = "flink-application-properties-dev.json";
+    // Name of the local JSON resource with the application properties in the same format 
+    // as they are received from the Amazon Managed Service for Apache Flink runtime
+	private static final String LOCAL_APPLICATION_PROPERTIES_RESOURCE = "flink-application-properties-dev.json";
 
     private static boolean isLocal(StreamExecutionEnvironment env) {
         return env instanceof LocalStreamEnvironment;
@@ -40,33 +39,33 @@ public class StreamingJob {
         if (isLocal(env)) {
             LOG.info("Loading application properties from '{}'", LOCAL_APPLICATION_PROPERTIES_RESOURCE);
             return KinesisAnalyticsRuntime.getApplicationProperties(
-                    StreamingJob.class.getClassLoader()
-                            .getResource(LOCAL_APPLICATION_PROPERTIES_RESOURCE).getPath());
+            	StreamingJob.class.getClassLoader()
+                    .getResource(LOCAL_APPLICATION_PROPERTIES_RESOURCE).getPath());
         } else {
             LOG.info("Loading application properties from Amazon Managed Service for Apache Flink");
             return KinesisAnalyticsRuntime.getApplicationProperties();
         }
     }
 
-    private static KinesisStreamsSource<JsonNode> createKinesisSource(Properties inputProperties) {
+    private static KinesisStreamsSource<String> createKinesisSource(Properties inputProperties) {
         // Properties を Map<String, String> に変換
         Map<String, String> propertiesMap = inputProperties.entrySet().stream()
                 .collect(Collectors.toMap(
                     e -> String.valueOf(e.getKey()),  // Key を String に変換
                     e -> String.valueOf(e.getValue()) // Value を String に変換
                 ));
-        return KinesisStreamsSource.<JsonNode>builder()
+        return KinesisStreamsSource.<String>builder()
                 .setStreamArn(inputProperties.getProperty("stream.arn"))
                 .setSourceConfig(Configuration.fromMap(propertiesMap))
-                .setDeserializationSchema(new JsonDeserializationSchema<>(JsonNode.class))
+                .setDeserializationSchema(new StockDeserializationSchema())
                 .build();
     }
     
-    private static KinesisStreamsSink<JsonNode> createKinesisSink(Properties outputProperties) {
-        return KinesisStreamsSink.<JsonNode>builder()
-        		.setStreamName(outputProperties.getProperty("stream.name"))
+    private static KinesisStreamsSink<String> createKinesisSink(Properties outputProperties) {
+        return KinesisStreamsSink.<String>builder()
+                .setStreamArn(outputProperties.getProperty("stream.arn"))
                 .setKinesisClientProperties(outputProperties)
-                .setSerializationSchema(new JsonSerializationSchema<>())
+                .setSerializationSchema(new StockSerializationSchema())
                 .setPartitionKeyGenerator(element -> String.valueOf(element.hashCode()))
                 .build();
     }
@@ -80,18 +79,18 @@ public class StreamingJob {
         LOG.warn("Application properties: {}", applicationProperties);
 
         // Kinesis source 
-        KinesisStreamsSource<JsonNode> source = createKinesisSource(applicationProperties.get("InputStreamGroup"));
+        KinesisStreamsSource<String> source = createKinesisSource(applicationProperties.get("InputStreamGroup"));
         LOG.warn("source: " + source);
-        DataStream<JsonNode> input = env.fromSource(source,
-                WatermarkStrategy.noWatermarks(),
-                "Kinesis source",
-                TypeInformation.of(JsonNode.class));
+        DataStream<String> input = env.fromSource(source, WatermarkStrategy.noWatermarks(),
+                "Kinesis source", TypeInformation.of(String.class));
         LOG.warn("input: " + input);
 
+        
+
         // Kinesis sink
-        KinesisStreamsSink<JsonNode> sink = createKinesisSink(applicationProperties.get("OutputStreamGroup"));
-        LOG.warn("sink: " + sink.toString());
-        DataStreamSink<JsonNode> aaa = input.sinkTo(sink);
+        KinesisStreamsSink<String> sink = createKinesisSink(applicationProperties.get("OutputStreamGroup"));
+        LOG.warn("sink: " + sink);
+        DataStreamSink<String> aaa = input.sinkTo(sink);
         LOG.warn("aaa: " + aaa);
 
         JobExecutionResult result = env.execute("Flink Kinesis Source and Sink examples");
