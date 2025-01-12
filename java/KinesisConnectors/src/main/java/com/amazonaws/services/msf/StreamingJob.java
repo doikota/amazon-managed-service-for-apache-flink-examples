@@ -22,7 +22,7 @@ import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class StreamingJob {
-    private static final Logger LOG = LoggerFactory.getLogger(StreamingJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StreamingJob.class);
 
     // Name of the local JSON resource with the application properties in the same format 
     // as they are received from the Amazon Managed Service for Apache Flink runtime
@@ -37,12 +37,12 @@ public class StreamingJob {
      */
     private static Map<String, Properties> loadApplicationProperties(StreamExecutionEnvironment env) throws IOException {
         if (isLocal(env)) {
-            LOG.info("Loading application properties from '{}'", LOCAL_APPLICATION_PROPERTIES_RESOURCE);
+            LOGGER.info("Loading application properties from '{}'", LOCAL_APPLICATION_PROPERTIES_RESOURCE);
             return KinesisAnalyticsRuntime.getApplicationProperties(
             	StreamingJob.class.getClassLoader()
                     .getResource(LOCAL_APPLICATION_PROPERTIES_RESOURCE).getPath());
         } else {
-            LOG.info("Loading application properties from Amazon Managed Service for Apache Flink");
+            LOGGER.info("Loading application properties from Amazon Managed Service for Apache Flink");
             return KinesisAnalyticsRuntime.getApplicationProperties();
         }
     }
@@ -76,24 +76,24 @@ public class StreamingJob {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         final Map<String, Properties> applicationProperties = loadApplicationProperties(env);
         
-        LOG.warn("Application properties: {}", applicationProperties);
+        LOGGER.info("Application properties: {}", applicationProperties);
 
         // Kinesis source 
         KinesisStreamsSource<String> source = createKinesisSource(applicationProperties.get("InputStreamGroup"));
-        LOG.warn("source: " + source);
+        LOGGER.info("source: " + source);
         DataStream<String> input = env.fromSource(source, WatermarkStrategy.noWatermarks(),
                 "Kinesis source", TypeInformation.of(String.class));
-        LOG.warn("input: " + input);
+        LOGGER.info("input: " + input);
 
         
 
         // Kinesis sink
         KinesisStreamsSink<String> sink = createKinesisSink(applicationProperties.get("OutputStreamGroup"));
-        LOG.warn("sink: " + sink);
+        LOGGER.info("sink: " + sink);
         DataStreamSink<String> aaa = input.sinkTo(sink);
-        LOG.warn("aaa: " + aaa);
+        LOGGER.info("aaa: " + aaa);
 
         JobExecutionResult result = env.execute("Flink Kinesis Source and Sink examples");
-        LOG.warn("result: " + result);
+        LOGGER.info("result: " + result);
     }
 }

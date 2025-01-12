@@ -77,12 +77,19 @@
             <version>${aws.connector.version}</version>
         </dependency>
 
-		    <!-- JSON を扱うためのライブラリ -->
+		    <!-- JSONを扱うためのライブラリ -->
 		    <dependency>
 		        <groupId>org.apache.flink</groupId>
 		        <artifactId>flink-json</artifactId>
 		        <version>${flink.version}</version>
 		    </dependency>
+		    
+		    <!-- JSONでLocalDateTime を扱うためのライブラリ -->
+		    <dependency>
+				    <groupId>com.fasterxml.jackson.datatype</groupId>
+				    <artifactId>jackson-datatype-jsr310</artifactId>
+				    <version>2.15.0</version>  <!-- Jackson のバージョンに合わせて変更 -->
+				</dependency>
 
         <!-- Add logging framework, to produce console output when running in the IDE. -->
         <!-- These dependencies are excluded from the application JAR by default. -->

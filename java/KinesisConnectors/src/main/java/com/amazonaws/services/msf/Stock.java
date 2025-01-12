@@ -1,9 +1,8 @@
 package com.amazonaws.services.msf;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * Captures the key elements of a stock trade, such as the ticker symbol, price,
@@ -12,20 +11,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class Stock {
 
-    private String eventTime;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    private LocalDateTime eventTime;
 	private String ticker;
     private double price;
 
     public Stock() {
     }
 
-    public Stock(String eventTime, String ticker, double price) {
+    public Stock(LocalDateTime eventTime, String ticker, double price) {
     	this.eventTime = eventTime;
         this.ticker = ticker;
         this.price = price;
     }
 
-    public String getEventTime() {
+    public LocalDateTime getEventTime() {
 		return eventTime;
 	}
 
