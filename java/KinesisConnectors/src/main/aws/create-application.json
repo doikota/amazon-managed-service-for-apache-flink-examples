@@ -1,0 +1,43 @@
+{
+	"ApplicationName": "golden-kinesis-analytics-connect",
+	"ApplicationDescription": "Kinesis Analytics Application",
+	"RuntimeEnvironment": "FLINK-1_20",
+	"ServiceExecutionRole": "arn:aws:iam::718624127210:role/golden-kinesis-analytics-role",
+	"ApplicationConfiguration": {
+		"ApplicationCodeConfiguration": {
+			"CodeContent": {
+				"S3ContentLocation": {
+					"BucketARN": "arn:aws:s3:::golden-kinesisanalytics-streamingjob",
+					"FileKey": "kinesis-connectors-1.0.jar"
+				}
+			},
+			"CodeContentType": "ZIPFILE"
+		},
+		"EnvironmentProperties": {
+			"PropertyGroups": [
+				{
+					"PropertyGroupId": "InputStreamGroup",
+					"PropertyMap": {
+						"aws.region": "ap-northeast-1",
+						"stream.name": "InputStream",
+						"stream.arn": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/InputStream",
+						"source.init.position": "TRIM_HORIZON"
+					}
+				},
+				{
+					"PropertyGroupId": "OutputStreamGroup",
+					"PropertyMap": {
+						"aws.region": "ap-northeast-1",
+						"stream.name": "OutputStream",
+						"stream.arn": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/OutputStream"
+					}
+				}
+			]
+		}
+	},
+	"CloudWatchLoggingOptions": [
+		{
+			"LogStreamARN": "arn:aws:logs:ap-northeast-1:718624127210:log-group:golden-kinesis-analytics-connect:log-stream:kinesis-analytics-log-stream"
+		}
+	]
+}

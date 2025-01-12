@@ -2,6 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.amazonaws</groupId>
@@ -30,7 +31,6 @@
                 <!-- Get the latest SDK version from https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-bom -->
                 <version>1.12.677</version>
                 <type>pom</type>
-                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -56,7 +56,6 @@
             <version>${flink.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- Library to retrieve runtime application properties in Managed Service for Apache Flink  -->
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -78,23 +77,32 @@
             <version>${aws.connector.version}</version>
         </dependency>
 
+		    <!-- JSON を扱うためのライブラリ -->
+		    <dependency>
+		        <groupId>org.apache.flink</groupId>
+		        <artifactId>flink-json</artifactId>
+		        <version>${flink.version}</version>
+		    </dependency>
+
         <!-- Add logging framework, to produce console output when running in the IDE. -->
         <!-- These dependencies are excluded from the application JAR by default. -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
+	    <!-- SLF4J API -->
+	    <dependency>
+	        <groupId>org.slf4j</groupId>
+	        <artifactId>slf4j-api</artifactId>
+	        <version>2.0.9</version>
+	    </dependency>
+	    <!-- Logback 実装 -->
+	    <dependency>
+	        <groupId>ch.qos.logback</groupId>
+	        <artifactId>logback-classic</artifactId>
+	        <version>1.4.14</version>
+	    </dependency>
     </dependencies>
 
     <build>
@@ -156,6 +164,28 @@
                     </execution>
                 </executions>
             </plugin>
+						<!--plugin>
+						    <groupId>org.codehaus.mojo</groupId>
+						    <artifactId>exec-maven-plugin</artifactId>
+						    <version>3.0.0</version>
+						    <executions>
+						        <execution>
+						            <phase>install</phase>
+						            <goals>
+						                <goal>exec</goal>
+						            </goals>
+						        </execution>
+						    </executions>
+						    <configuration>
+						        <executable>aws</executable>
+						        <arguments>
+						            <argument>s3</argument>
+						            <argument>cp</argument>
+						            <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
+						            <argument>s3://golden-kinesisanalytics-streamingjob/</argument>
+						        </arguments>
+						    </configuration>
+						</plugin-->            
         </plugins>
     </build>
 </project>

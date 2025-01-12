@@ -158,28 +158,28 @@
                     </execution>
                 </executions>
             </plugin>
-			<plugin>
-			    <groupId>org.codehaus.mojo</groupId>
-			    <artifactId>exec-maven-plugin</artifactId>
-			    <version>3.0.0</version>
-			    <executions>
-			        <execution>
-			            <phase>install</phase>
-			            <goals>
-			                <goal>exec</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			    <configuration>
-			        <executable>aws</executable>
-			        <arguments>
-			            <argument>s3</argument>
-			            <argument>cp</argument>
-			            <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
-			            <argument>s3://golden-kinesisanalytics-basicstreamingjob/</argument>
-			        </arguments>
-			    </configuration>
-			</plugin>            
+						<plugin>
+						    <groupId>org.codehaus.mojo</groupId>
+						    <artifactId>exec-maven-plugin</artifactId>
+						    <version>3.0.0</version>
+						    <executions>
+						        <execution>
+						            <phase>install</phase>
+						            <goals>
+						                <goal>exec</goal>
+						            </goals>
+						        </execution>
+						    </executions>
+						    <configuration>
+						        <executable>aws</executable>
+						        <arguments>
+						            <argument>s3</argument>
+						            <argument>cp</argument>
+						            <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
+						            <argument>s3://golden-kinesisanalytics-basicstreamingjob/</argument>
+						        </arguments>
+						    </configuration>
+						</plugin>            
         </plugins>
     </build>
 </project>

@@ -1,0 +1,18 @@
+<configuration>
+    <!-- デフォルトのログレベルを WARN に設定 -->
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!-- コンソール出力の設定 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- パッケージごとにログレベルを変更 -->
+    <!-- logger name="com.example" level="DEBUG"/-->
+    <!-- logger name="org.springframework" level="WARN"/-->
+    <logger name="com.amazonaws.services.msf" level="INFO"/>
+</configuration>

@@ -10,8 +10,8 @@
                 "s3:DeleteObject"
             ],
             "Resource": [
-                "arn:aws:s3:::golden-kinesisanalytics-basicstreamingjob",
-                "arn:aws:s3:::golden-kinesisanalytics-basicstreamingjob/*"
+                "arn:aws:s3:::*",
+                "arn:aws:s3:::*/*"
             ]
         },
         {
@@ -33,7 +33,7 @@
                 "logs:DescribeLogStreams"
             ],
             "Resource": [
-                "arn:aws:logs:ap-northeast-1:718624127210:log-group:golden-kinesis-analytics-application:log-stream:*"
+                "arn:aws:logs:ap-northeast-1:718624127210:log-group:*:log-stream:*"
             ]
         },
         {
@@ -43,20 +43,20 @@
                 "logs:PutLogEvents"
             ],
             "Resource": [
-                "arn:aws:logs:ap-northeast-1:718624127210:log-group:golden-kinesis-analytics-application:log-stream:kinesis-analytics-log-stream"
+                "arn:aws:logs:ap-northeast-1:718624127210:log-group:*:log-stream:*"
             ]
         },
         {
             "Sid": "ReadInputStream",
             "Effect": "Allow",
             "Action": "kinesis:*",
-            "Resource": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/InputStream"
+            "Resource": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/*"
         },
         {
             "Sid": "WriteOutputStream",
             "Effect": "Allow",
             "Action": "kinesis:*",
-            "Resource": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/OutputStream"
+            "Resource": "arn:aws:kinesis:ap-northeast-1:718624127210:stream/*"
         }
     ]
 }

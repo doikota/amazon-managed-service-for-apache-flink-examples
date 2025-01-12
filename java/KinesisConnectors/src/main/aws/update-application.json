@@ -1,0 +1,13 @@
+{
+	"ApplicationName": "golden-kinesis-analytics-connect",
+	"ApplicationConfigurationUpdate": {
+		"ApplicationCodeConfigurationUpdate": {
+		    "CodeContentUpdate": {
+				"S3ContentLocationUpdate": {
+					"BucketARNUpdate": "arn:aws:s3:::golden-kinesisanalytics-basicstreamingjob",
+					"FileKeyUpdate": "amazon-msf-java-stream-app-1.0.jar"
+				}
+		    }
+		}
+	}
+}

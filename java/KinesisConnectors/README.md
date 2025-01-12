@@ -23,16 +23,16 @@ All parameters are case-sensitive.
 
 | Group ID        | Key                             | Description                                                                                                                                                  | 
 |-----------------|---------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `InputStream0`  | `stream.arn`                    | ARN of the input stream.                                                                                                                                     |
-| `InputStream0`  | `aws.region`                    | Region of the input stream.                                                                                                                                  |
-| `InputStream0`  | `source.init.position`          | (optional) Starting position when the application starts with no state. Default is `LATEST`                                                                  |
-| `InputStream0` | `source.reader.type`            | (optional) Choose between standard (`POLLING`) and Enhanced Fan-Out (`EFO`) consumer. Default is `POLLING`.                                                  |
-| `InputStream0` | `source.efo.consumer.name`      | (optional, for EFO consumer mode only) Name of the EFO consumer. Only used if `source.reader.type=EFO`.                                                      |
-| `InputStream0` | `source.efo.consumer.lifecycle` | (optional, for EFO consumer mode only) Lifecycle management mode of EFO consumer. Choose between `JOB_MANAGED` and `SELF_MANAGED`. Default is `JOB_MANAGED`. |
-| `OutputStream0` | `stream.arn`                    | ARN of the output stream.                                                                                                                                    |
-| `OutputStream0`  | `aws.region`                    | Region of the output stream.                                                                                                                                 |
+| `InputStreamGroup`  | `stream.arn`                    | ARN of the input stream.                                                                                                                                     |
+| `InputStreamGroup`  | `aws.region`                    | Region of the input stream.                                                                                                                                  |
+| `InputStreamGroup`  | `source.init.position`          | (optional) Starting position when the application starts with no state. Default is `LATEST`                                                                  |
+| `InputStreamGroup` | `source.reader.type`            | (optional) Choose between standard (`POLLING`) and Enhanced Fan-Out (`EFO`) consumer. Default is `POLLING`.                                                  |
+| `InputStreamGroup` | `source.efo.consumer.name`      | (optional, for EFO consumer mode only) Name of the EFO consumer. Only used if `source.reader.type=EFO`.                                                      |
+| `InputStreamGroup` | `source.efo.consumer.lifecycle` | (optional, for EFO consumer mode only) Lifecycle management mode of EFO consumer. Choose between `JOB_MANAGED` and `SELF_MANAGED`. Default is `JOB_MANAGED`. |
+| `OutputStreamGroup` | `stream.arn`                    | ARN of the output stream.                                                                                                                                    |
+| `OutputStreamGroup`  | `aws.region`                    | Region of the output stream.                                                                                                                                 |
 
-Every parameter in the `InputStream0` group is passed to the Kinesis consumer, and every parameter in the `OutputStream0` is passed to the Kinesis client of the sink.
+Every parameter in the `InputStreamGroup` group is passed to the Kinesis consumer, and every parameter in the `OutputStreamGroup` is passed to the Kinesis client of the sink.
 
 See Flink Kinesis connector docs](https://nightlies.apache.org/flink/flink-docs-release-1.19/docs/connectors/datastream/kinesis/) for details about configuring the Kinesis conector.
 
