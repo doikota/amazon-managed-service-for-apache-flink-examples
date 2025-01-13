@@ -22,7 +22,6 @@ def generate(stream_name, kinesis_client):
         # data をJSON形式にする
         print(data)
         kinesis_client.put_record(
-            # StreamName=stream_name, Data=json.dumps(data).encode("utf-8"), PartitionKey=data.get("ticker")
             StreamName=stream_name, Data=json.dumps(data), PartitionKey=data.get("ticker")
         )
         # sleep for 10 second

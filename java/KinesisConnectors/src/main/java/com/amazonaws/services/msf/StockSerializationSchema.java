@@ -26,7 +26,7 @@ public class StockSerializationSchema implements SerializationSchema<Stock> {
 
     @Override
     public byte[] serialize(Stock stock) {
-    	LOGGER.info("stock: {}", stock);
+    	LOGGER.debug("stock: {}", stock);
         try {
             return objectMapper.writeValueAsBytes(stock);
         } catch (Exception e) {

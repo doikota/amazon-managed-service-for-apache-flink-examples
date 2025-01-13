@@ -31,11 +31,9 @@ public class StockDeserializationSchema implements DeserializationSchema<Stock> 
     public Stock deserialize(byte[] message) throws IOException {
         // byte[] を String に変換
         String jsonString = new String(message, StandardCharsets.UTF_8);
-        LOGGER.info("jsonString: {}", jsonString);
-        
         // JSON文字列をStock にマッピング
         Stock stock = objectMapper.readValue(jsonString, Stock.class);
-        LOGGER.info("stock: {}", stock);
+        LOGGER.debug("stock: {}", stock);
         
         return stock;
     }

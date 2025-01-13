@@ -57,7 +57,7 @@ public class Stock {
 
     @Override
     public String toString() {
-        return String.format("%s %s $%.02f", eventTime, ticker, price);
+        return String.format("eventTime:%s, ticker:%s, price:%.02f", eventTime, ticker, price);
     }
 
 }
