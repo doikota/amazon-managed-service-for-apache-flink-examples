@@ -11,21 +11,26 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 public class Stock {
 
-	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
-    private LocalDateTime eventTime;
-	private String ticker;
-    private double price;
-
     public Stock() {
     }
 
-    public Stock(LocalDateTime eventTime, String ticker, double price) {
+//    public Stock(LocalDateTime eventTime, String ticker, double price) {
+    public Stock(String eventTime, String ticker, double price) {
     	this.eventTime = eventTime;
         this.ticker = ticker;
         this.price = price;
     }
 
-    public LocalDateTime getEventTime() {
+//	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+//    private LocalDateTime eventTime;
+	private String eventTime;
+    
+	private String ticker;
+	
+    private double price;
+
+//    public LocalDateTime getEventTime() {
+    public String getEventTime() {
 		return eventTime;
 	}
 
@@ -36,6 +41,19 @@ public class Stock {
     public double getPrice() {
         return price;
     }
+
+//	public void setEventTime(LocalDateTime eventTime) {
+    public void setEventTime(String eventTime) {
+		this.eventTime = eventTime;
+	}
+
+	public void setTicker(String ticker) {
+		this.ticker = ticker;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
     @Override
     public String toString() {

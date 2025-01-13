@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class StreamingJob {
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamingJob.class);
@@ -47,26 +46,26 @@ public class StreamingJob {
         }
     }
 
-    private static KinesisStreamsSource<String> createKinesisSource(Properties inputProperties) {
+    private static KinesisStreamsSource<Stock> createKinesisSource(Properties inputProperties) {
         // Properties を Map<String, String> に変換
         Map<String, String> propertiesMap = inputProperties.entrySet().stream()
                 .collect(Collectors.toMap(
                     e -> String.valueOf(e.getKey()),  // Key を String に変換
                     e -> String.valueOf(e.getValue()) // Value を String に変換
                 ));
-        return KinesisStreamsSource.<String>builder()
+        return KinesisStreamsSource.<Stock>builder()
                 .setStreamArn(inputProperties.getProperty("stream.arn"))
                 .setSourceConfig(Configuration.fromMap(propertiesMap))
                 .setDeserializationSchema(new StockDeserializationSchema())
                 .build();
     }
     
-    private static KinesisStreamsSink<String> createKinesisSink(Properties outputProperties) {
-        return KinesisStreamsSink.<String>builder()
+    private static KinesisStreamsSink<Stock> createKinesisSink(Properties outputProperties) {
+        return KinesisStreamsSink.<Stock>builder()
                 .setStreamArn(outputProperties.getProperty("stream.arn"))
                 .setKinesisClientProperties(outputProperties)
                 .setSerializationSchema(new StockSerializationSchema())
-                .setPartitionKeyGenerator(element -> String.valueOf(element.hashCode()))
+                .setPartitionKeyGenerator(element -> element.getTicker())
                 .build();
     }
 
@@ -79,21 +78,28 @@ public class StreamingJob {
         LOGGER.info("Application properties: {}", applicationProperties);
 
         // Kinesis source 
-        KinesisStreamsSource<String> source = createKinesisSource(applicationProperties.get("InputStreamGroup"));
-        LOGGER.info("source: " + source);
-        DataStream<String> input = env.fromSource(source, WatermarkStrategy.noWatermarks(),
-                "Kinesis source", TypeInformation.of(String.class));
-        LOGGER.info("input: " + input);
+        KinesisStreamsSource<Stock> source = createKinesisSource(applicationProperties.get("InputStreamGroup"));
+        LOGGER.info("source: {}", source);
+        DataStream<Stock> extract = env.fromSource(source, WatermarkStrategy.noWatermarks(),
+                "Kinesis source", TypeInformation.of(Stock.class));
+        LOGGER.info("extract: {}", extract);
 
+        // データを変換する
+		DataStream<Stock> transform = extract.map(stock -> {
+			LOGGER.info("stock: {}", stock);
+			// priceを10倍にする
+			stock.setPrice(stock.getPrice() * 10);
+			return stock;
+		});
+        LOGGER.info("transform: {}", transform);
         
-
         // Kinesis sink
-        KinesisStreamsSink<String> sink = createKinesisSink(applicationProperties.get("OutputStreamGroup"));
-        LOGGER.info("sink: " + sink);
-        DataStreamSink<String> aaa = input.sinkTo(sink);
-        LOGGER.info("aaa: " + aaa);
+        KinesisStreamsSink<Stock> sink = createKinesisSink(applicationProperties.get("OutputStreamGroup"));
+        LOGGER.info("sink: {}", sink);
+        DataStreamSink<Stock> load = transform.sinkTo(sink);
+        LOGGER.info("load: {}", load);
 
         JobExecutionResult result = env.execute("Flink Kinesis Source and Sink examples");
-        LOGGER.info("result: " + result);
+        LOGGER.info("result: {}", result);
     }
 }
