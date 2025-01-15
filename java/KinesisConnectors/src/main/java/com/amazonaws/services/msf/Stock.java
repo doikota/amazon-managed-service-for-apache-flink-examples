@@ -1,9 +1,5 @@
 package com.amazonaws.services.msf;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 /**
  * Captures the key elements of a stock trade, such as the ticker symbol, price,
  * number of shares, the type of the trade (buy or sell), and an id uniquely identifying
@@ -11,26 +7,47 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 public class Stock {
 
-    public Stock() {
+    /**
+     * Represents the type of the stock trade eg buy or sell.
+     */
+    public enum TradeType {
+        BUY,
+        SELL
     }
 
-//    public Stock(LocalDateTime eventTime, String ticker, double price) {
-    public Stock(String eventTime, String ticker, double price) {
-    	this.eventTime = eventTime;
-        this.ticker = ticker;
-        this.price = price;
-    }
-
-//	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
-//    private LocalDateTime eventTime;
+  
+    private long id;
+    private TradeType tradeType;
+    private long quantity;
 	private String eventTime;
-    
 	private String ticker;
-	
-    private double price;
+	private double price;
 
-//    public LocalDateTime getEventTime() {
-    public String getEventTime() {
+	public Stock() {
+	}
+
+	public Stock(long id, TradeType tradeType, long quantity, String eventTime, String ticker, double price) {
+		this.id = id;
+		this.tradeType = tradeType;
+		this.quantity = quantity;
+		this.eventTime = eventTime;
+		this.ticker = ticker;
+		this.price = price;
+	}
+
+    public long getId() {
+		return id;
+	}
+
+	public TradeType getTradeType() {
+		return tradeType;
+	}
+
+	public long getQuantity() {
+		return quantity;
+	}
+
+	public String getEventTime() {
 		return eventTime;
 	}
 
@@ -42,8 +59,19 @@ public class Stock {
         return price;
     }
 
-//	public void setEventTime(LocalDateTime eventTime) {
-    public void setEventTime(String eventTime) {
+    public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setTradeType(TradeType tradeType) {
+		this.tradeType = tradeType;
+	}
+
+	public void setQuantity(long quantity) {
+		this.quantity = quantity;
+	}
+
+	public void setEventTime(String eventTime) {
 		this.eventTime = eventTime;
 	}
 
@@ -57,7 +85,8 @@ public class Stock {
 
     @Override
     public String toString() {
-        return String.format("eventTime:%s, ticker:%s, price:%.02f", eventTime, ticker, price);
+        return String.format("ID %d: %s %d %s $%.02f, %s",
+                id, tradeType, quantity, ticker, price, eventTime);
     }
 
 }
